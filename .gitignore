@@ -1,0 +1,15 @@
+# RStudio / R session files
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+
+# OS
+.DS_Store
+
+# rsconnect deployment records (may contain account metadata)
+rsconnect/
+
+# NOTE: the following ARE committed (needed by Connect Cloud):
+#   app.R, manifest.json, renv.lock, R/, inst/app/data/*.rds, DESCRIPTION, NAMESPACE
+# The renv library itself is ignored via renv/.gitignore.

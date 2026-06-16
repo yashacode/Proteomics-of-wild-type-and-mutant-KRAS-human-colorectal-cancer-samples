@@ -1,0 +1,27 @@
+Package: ShinyTest
+Title: An Amazing Shiny App
+Version: 0.0.0.9000
+Authors@R: 
+    person(given = "Jacob",
+           family = "Epstein",
+           role = c("aut", "cre"),
+           email = "your@email.com")
+Description: What the package does (one paragraph).
+License: What license is it under?
+Imports:
+    bslib,
+    config,
+    dplyr,
+    ggplot2,
+    ggrepel,
+    golem,
+    htmlwidgets,
+    methods,
+    pkgload,
+    plotly,
+    renv,
+    shiny,
+    SummarizedExperiment
+Encoding: UTF-8
+LazyData: true
+Config/roxygen2/version: 8.0.0

@@ -1,0 +1,43 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(Rscript -e ' *)",
+      "Bash(Rscript /Users/jacobepstein/ShinyTest/data_raw/process_data.R)",
+      "Bash(grep -v \"^Loading\\\\|^Attach\\\\|The follow\\\\|masked\\\\|package:\\\\|^\\\\$\")",
+      "Bash(echo \"started, pid $!\")",
+      "Read(//private/tmp/**)",
+      "Bash(curl -s localhost:7654)",
+      "Bash(kill 79006)",
+      "Bash(echo \"pid $!\")",
+      "Read(//tmp/**)",
+      "Bash(kill 79168)",
+      "mcp__Claude_Preview__preview_start",
+      "Bash(pkill -f \"shiny.port=765\")",
+      "Bash(Rscript -e \"pkgload::load_all\\('.'\\); cat\\('loaded OK; mod exists:', exists\\('mod_volcano_ui'\\), exists\\('mod_volcano_server'\\),'\\\\n'\\)\")",
+      "Bash(curl -s \"http://localhost:7655/session/_/dataobj/\" -o /dev/null -w \"%{http_code}\\\\n\")",
+      "Bash(Rscript -e \"pkgload::load_all\\('.'\\); cat\\('OK\\\\n'\\)\")",
+      "Bash(Rscript -e \"pkgload::load_all\\('.'\\); cat\\('OK', exists\\('mod_intro_ui'\\), exists\\('mod_intro_server'\\),'\\\\n'\\)\")",
+      "Bash(Rscript data_raw/process_data.R)",
+      "WebFetch(domain:www.ebi.ac.uk)",
+      "Bash(grep -vE \"out-of-sync|^Filtering|removed\\\\$|proteins were\")",
+      "Bash(Rscript -e \"se<-readRDS\\('inst/app/data/cancer_se.rds'\\); cat\\('SE saved:', class\\(se\\)[1], paste\\(dim\\(se\\),collapse='x'\\),'\\\\n'\\)\")",
+      "Bash(timeout 60 Rscript -e ' *)",
+      "Bash(Rscript -e \"golem::remove_favicon\\(path='inst/app/www/favicon.ico'\\)\")",
+      "Bash(git --version)",
+      "Bash(echo \"git: $\\(git --version || echo MISSING\\)\")",
+      "Bash(gh --version)",
+      "Bash(echo \"gh: $\\(gh --version)",
+      "Bash(pkill -f \"vim.*app.R\")",
+      "Bash(pkill vim *)",
+      "Bash(Rscript -e \"renv::snapshot\\(prompt=FALSE\\)\")",
+      "Bash(Rscript -e \"renv::install\\('rsconnect', prompt=FALSE\\)\")",
+      "Bash(Rscript -e \"rsconnect::writeManifest\\(appPrimaryDoc='app.R'\\)\")",
+      "Bash(Rscript -e 'm<-jsonlite::fromJSON\\('\\\\''manifest.json'\\\\''\\); cat\\('\\\\''appmode:'\\\\'', m$metadata$appmode, '\\\\''| primary:'\\\\'', m$metadata$primary_rmd %||% m$metadata$entrypoint %||% '\\\\''app.R'\\\\'', '\\\\''| n pkgs:'\\\\'', length\\(m$packages\\), '\\\\''\\\\n'\\\\''\\)')",
+      "Bash(git init *)",
+      "Bash(git add *)",
+      "Bash(grep -E \"^\\(app.R|manifest.json|renv.lock|DESCRIPTION|NAMESPACE\\)$|inst/app/data/.*rds$|^R/\")",
+      "Bash(git diff *)",
+      "Bash(xargs -0 du -ch)"
+    ]
+  }
+}
