@@ -37,7 +37,10 @@
       "Bash(git add *)",
       "Bash(grep -E \"^\\(app.R|manifest.json|renv.lock|DESCRIPTION|NAMESPACE\\)$|inst/app/data/.*rds$|^R/\")",
       "Bash(git diff *)",
-      "Bash(xargs -0 du -ch)"
+      "Bash(xargs -0 du -ch)",
+      "Bash(git config *)",
+      "Bash(git commit -q -m ' *)",
+      "Bash(Rscript -e \"pkgload::load_all\\('.'\\); cat\\('app loads OK\\\\n'\\)\")"
     ]
   }
 }
