@@ -124,7 +124,9 @@ mod_protein_detail_server <- function(id,
         return(NULL)
       }
       df <- reactive_de()
-      hit <- df[df[[feature_col]] == g, , drop = FALSE]
+      # Use %in% (not ==): with NA values in the feature column, `==`
+      # yields NA indices that R turns into phantom all-NA rows.
+      hit <- df[df[[feature_col]] %in% g, , drop = FALSE]
       if (nrow(hit) == 0) {
         return(NULL)
       }
