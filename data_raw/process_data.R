@@ -38,8 +38,15 @@ se_p <- se %>%
   ProtPipe::filter_proteins_by_percent(50) %>%
   ProtPipe::impute_left_dist()
 
-# Save the filtered/imputed SummarizedExperiment for the heatmap module
-saveRDS(se_p, "../inst/app/data/cancer_se.rds")
+# Save the heatmap inputs as plain objects (matrix + annotations) rather
+# than a SummarizedExperiment, so the deployed app needs no Bioconductor
+# dependency. Components stay row/column aligned.
+heatmap_data <- list(
+  expr     = as.matrix(SummarizedExperiment::assay(se_p)),
+  row_data = as.data.frame(SummarizedExperiment::rowData(se_p)),
+  col_data = as.data.frame(SummarizedExperiment::colData(se_p))
+)
+saveRDS(heatmap_data, "../inst/app/data/heatmap_data.rds")
 
 DE <- ProtPipe::do_limma_binary(se_p, "mutated", "mutant", "Wildtype")
 

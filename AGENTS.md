@@ -47,13 +47,20 @@ to the function/module and pass the concrete value from `app_server.R` /
     the seed keeps results reproducible across rebuilds. Keep it.
   - Outputs: `inst/app/data/cancer_de.rds` (full limma DE table incl. per-sample
     intensity columns named `M#####a`), `inst/app/data/sample_meta.rds`
-    (SampleID -> group), and `inst/app/data/cancer_se.rds` (the filtered/imputed
-    SummarizedExperiment used by the heatmap).
-- SummarizedExperiment layout: assay `intensities`; rowData has the feature
-  annotation incl. `Genes` (may be ";"-separated); colData has `mutated`
-  (mutant/Wildtype) and `mutation` (fine-grained KRAS variant). The heatmap
-  matches genes against a **rowData** column and groups samples by **colData**
-  column(s) -- averaging within each group, then z-scoring each row.
+    (SampleID -> group), and `inst/app/data/heatmap_data.rds` (heatmap inputs).
+- `heatmap_data.rds` is a plain list `list(expr, row_data, col_data)` extracted
+  from the SummarizedExperiment -- NOT an SE object. This deliberately avoids a
+  Bioconductor runtime dependency, which broke Posit Connect Cloud builds (it
+  could not resolve bleeding-edge Bioc-devel versions). `expr` is the intensity
+  matrix; `row_data` has feature annotation incl. `Genes` (may be ";"-separated,
+  row-aligned to `expr`); `col_data` has `mutated` (mutant/Wildtype) and
+  `mutation` (fine-grained KRAS variant), column-aligned to `expr`. The heatmap
+  matches genes against a `row_data` column and groups samples by a `col_data`
+  column -- averaging within each group, then z-scoring each row. Keep the app
+  free of Bioconductor imports so deployment stays reliable.
+- renv uses **explicit** snapshots (`renv::settings$snapshot.type("explicit")`)
+  so deps in `data_raw/process_data.R` (ProtPipe, SummarizedExperiment,
+  data.table) do NOT leak into `renv.lock`. Only DESCRIPTION Imports are locked.
 - In the DE intensity columns, `0` means undetected/missing. The boxplot in
   `mod_protein_detail` drops zeros and shows per-group detection counts, because
   limma's `logFC` is computed on **imputed** data and can disagree with

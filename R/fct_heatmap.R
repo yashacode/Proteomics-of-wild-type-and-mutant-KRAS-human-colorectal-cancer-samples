@@ -1,17 +1,21 @@
 #' Group-averaged, row z-scored expression heatmap
 #'
-#' Builds a heatmap from a SummarizedExperiment: selected features (genes)
-#' are matched against a rowData column, samples are grouped by one or more
-#' colData columns, expression is averaged within each group, and each row
-#' (gene) is z-scored across groups.
+#' Builds a heatmap from an expression matrix plus row/column annotations
+#' (the components of a SummarizedExperiment, kept as plain objects so the
+#' app has no Bioconductor runtime dependency). Selected features (genes)
+#' are matched against a row-annotation column, samples are grouped by one
+#' or more column-annotation columns, expression is averaged within each
+#' group, and each row (gene) is z-scored across groups.
 #'
-#' @param se A SummarizedExperiment.
+#' @param expr Numeric expression matrix (features x samples), row-aligned
+#'   to `row_data` and column-aligned to `col_data`.
+#' @param row_data data.frame of feature annotations (one row per `expr` row).
+#' @param col_data data.frame of sample annotations (one row per `expr` col).
 #' @param genes Character vector of feature/gene names to display.
-#' @param group_by Character vector of colData column name(s) to group
+#' @param group_by Character vector of `col_data` column name(s) to group
 #'   samples by. Multiple columns are combined into a single grouping.
-#' @param gene_col rowData column to match `genes` against (default "Genes").
-#'   Values may contain multiple symbols separated by ";".
-#' @param assay Assay name or index (default: the first assay).
+#' @param gene_col `row_data` column to match `genes` against (default
+#'   "Genes"). Values may contain multiple symbols separated by ";".
 #' @param cluster_rows Order rows by hierarchical clustering (default TRUE).
 #' @param interactive If TRUE, return a plotly object.
 #' @param low_color,mid_color,high_color Diverging color scale endpoints.
@@ -19,11 +23,12 @@
 #'
 #' @return A ggplot (or plotly) object.
 #' @noRd
-plot_heatmap <- function(se,
+plot_heatmap <- function(expr,
+                         row_data,
+                         col_data,
                          genes,
                          group_by,
                          gene_col = "Genes",
-                         assay = NULL,
                          cluster_rows = TRUE,
                          interactive = FALSE,
                          low_color = "#0072B2",
@@ -33,7 +38,7 @@ plot_heatmap <- function(se,
                          click_input_id = NULL) {
 
   # ---- package checks ----
-  required <- c("SummarizedExperiment", "ggplot2")
+  required <- "ggplot2"
   if (interactive) required <- c(required, "plotly")
   missing_pkgs <- required[!vapply(required, requireNamespace, logical(1), quietly = TRUE)]
   if (length(missing_pkgs) > 0) {
@@ -41,18 +46,18 @@ plot_heatmap <- function(se,
   }
 
   # ---- input validation ----
-  if (!methods::is(se, "SummarizedExperiment")) {
-    stop("`se` must be a SummarizedExperiment")
-  }
-  rd <- as.data.frame(SummarizedExperiment::rowData(se))
-  cd <- as.data.frame(SummarizedExperiment::colData(se))
+  mat <- as.matrix(expr)
+  rd <- as.data.frame(row_data)
+  cd <- as.data.frame(col_data)
+  if (nrow(mat) != nrow(rd)) stop("`expr` rows must align with `row_data`")
+  if (ncol(mat) != nrow(cd)) stop("`expr` columns must align with `col_data`")
 
   if (!gene_col %in% colnames(rd)) {
-    stop("gene_col '", gene_col, "' not found in rowData")
+    stop("gene_col '", gene_col, "' not found in row_data")
   }
   bad_groups <- group_by[!group_by %in% colnames(cd)]
   if (length(bad_groups) > 0) {
-    stop("group_by column(s) not in colData: ", paste(bad_groups, collapse = ", "))
+    stop("group_by column(s) not in col_data: ", paste(bad_groups, collapse = ", "))
   }
 
   genes <- unique(trimws(genes))
@@ -60,9 +65,6 @@ plot_heatmap <- function(se,
   if (length(genes) == 0) {
     stop("No genes provided")
   }
-
-  if (is.null(assay)) assay <- 1
-  mat <- SummarizedExperiment::assay(se, assay)
 
   # ---- match genes against rowData (handles ";"-separated symbols) ----
   row_symbols <- strsplit(as.character(rd[[gene_col]]), ";", fixed = TRUE)

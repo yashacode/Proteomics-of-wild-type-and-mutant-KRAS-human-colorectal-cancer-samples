@@ -20,12 +20,10 @@ Imports:
     ggrepel,
     golem,
     htmlwidgets,
-    methods,
     pkgload,
     plotly,
     renv,
-    shiny,
-    SummarizedExperiment
+    shiny
 Encoding: UTF-8
 LazyData: true
 Config/roxygen2/version: 8.0.0

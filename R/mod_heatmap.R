@@ -36,25 +36,26 @@ mod_heatmap_ui <- function(id) {
 #' heatmap Server Functions
 #'
 #' @param id Module id.
-#' @param se A SummarizedExperiment.
+#' @param data A list with `expr` (matrix), `row_data`, and `col_data`,
+#'   row/column aligned (see data_raw/process_data.R).
 #' @param default_genes Character vector pre-filled in the textbox.
-#' @param default_group_by colData column selected by default.
-#' @param gene_col rowData column to match genes against.
+#' @param default_group_by col_data column selected by default.
+#' @param gene_col row_data column to match genes against.
 #'
 #' @return A list with reactive `clicked_gene` (gene of the clicked tile,
 #'   or NULL).
 #'
 #' @noRd
 mod_heatmap_server <- function(id,
-                               se,
+                               data,
                                default_genes = character(0),
                                default_group_by = NULL,
                                gene_col = "Genes") {
   moduleServer(id, function(input, output, session) {
 
-    coldata_cols <- colnames(SummarizedExperiment::colData(se))
+    coldata_cols <- colnames(data$col_data)
 
-    # Populate grouping choices + defaults from the SE.
+    # Populate grouping choices + defaults from the column annotations.
     updateSelectInput(
       session,
       "group_by",
@@ -84,7 +85,9 @@ mod_heatmap_server <- function(id,
       )
       tryCatch(
         plot_heatmap(
-          se,
+          expr = data$expr,
+          row_data = data$row_data,
+          col_data = data$col_data,
           genes = gl,
           group_by = input$group_by,
           gene_col = gene_col,

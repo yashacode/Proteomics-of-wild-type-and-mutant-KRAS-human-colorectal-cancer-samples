@@ -8,7 +8,7 @@ app_server <- function(input, output, session) {
 
   de_data <- readRDS(app_sys("app/data/cancer_de.rds"))
   sample_meta <- readRDS(app_sys("app/data/sample_meta.rds"))
-  cancer_se <- readRDS(app_sys("app/data/cancer_se.rds"))
+  heatmap_data <- readRDS(app_sys("app/data/heatmap_data.rds"))
 
   mod_intro_server(
     "intro",
@@ -26,7 +26,7 @@ app_server <- function(input, output, session) {
 
   heatmap_out <- mod_heatmap_server(
     "heatmap",
-    se = cancer_se,
+    data = heatmap_data,
     default_genes = c("BHMT", "CPS1", "SERPINB3", "MAT1A", "STARD4"),
     default_group_by = "mutation"
   )
