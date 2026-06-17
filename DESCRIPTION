@@ -5,7 +5,7 @@ Authors@R:
     person(given = "Jacob",
            family = "Epstein",
            role = c("aut", "cre"),
-           email = "jacobepstein02@gmail.com")
+           email = "yashacode@users.noreply.github.com")
 Description: An interactive Shiny application for exploring differential
     protein expression between KRAS-mutant and wild-type human colorectal
     cancer samples. Provides an interactive volcano plot, a group-averaged
